@@ -1,11 +1,16 @@
 var webpack = require("webpack");
 module.exports = {
+    context: __dirname,
     entry: './entry.js',
     output: {
-        path: './',
+        path: __dirname,
         filename: 'bundle.js'
     },
-    plugins: [
-        new webpack.optimize.UglifyJsPlugin({minimize: true})
-    ]
+    // plugins: [
+    //     new webpack.optimize.UglifyJsPlugin({minimize: true})
+    // ]
+    optimization:{
+        minimize: true
+    },
+    mode: 'development'
 };
