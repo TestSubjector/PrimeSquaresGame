@@ -13,36 +13,9 @@
     <link rel="stylesheet" type="text/css" href="assets/css/tictac.css">
 </head>
 
-<body>
+<body onload="loadup()">
 
 <div id="gameArea">
-    <div class=title>
-        <h2>Temp</h2>
-        <button class="large ui blue basic button" v-on:click="changeInstr()">Hide/Reveal Instructions</button>
-    </div>
-
-    <div>
-        <div class="instr"v-if="showInstr()">
-            <strong>Overview:</strong> <br/>
-            <p> Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla euismod, eros dictum ultricies pharetra, turpis diam tincidunt nibh, ac posuere lorem lectus vel mauris. Duis sollicitudin mi purus, in vehicula</p>
-            <!-- <strong>Phases:</strong> <br/>
-            <ol>
-                <li> The Detector looks away from the screen while the Badguy builds a tunnel.
-                    Maximum length of the tunnel is randomly generated,
-                    and will be specified before building begins.
-                    The tunnel needs to be a simple path with a start and end node on the top and bottom rows respectively.
-                    In order to construct the tunnel, the Badguy needs to click on the edges he wants to be a part of his tunnel.
-                    When he is content with the tunnel, he clicks on the "I finished my tunnel" button in the info panel and the tunnel will disappear. </li>
-                <li> Now the Detector can begin detecting by placing probes on any number of intersections or edges. When the Detector is done,
-                    click the "Done placing first round of probes" button.
-                    If a given probe is on top of a part of the tunnel,
-                    the probe will turn green. Repeat this process up to two more times. </li>
-                <li> The Detector selects what she believes is the location of the tunnel.
-                    When she is done, she clicks on the "Ready to submit final guess" button. </li>
-            </ol> -->
-            <p>Mauris sit amet leo tempor, posuere risus ut, facilisis nibh. Proin sagittis dignissim enim et porttitor. Donec vel odio et lacus dictum luctus. Donec sagittis egestas malesuada. Donec eros nunc, porta at velit a, mattis eleifend sem. Suspendisse potenti. Fusce id massa eu lectus finibus feugiat a eu lorem.</p>
-        </div>
-    </div>
     <div id = "infoPanel" v-if="showInfoPanel()">
         <button class="large ui green basic button" v-on:click="gotoBegin()">Start from beginning</button>
         <div id = "basicInfoTwoPlayer" v-if="showBasicInfoPvP()">
@@ -129,17 +102,49 @@
             </transition>
         </div> -->
     </div>
-    <div class="title">
-        <h2>Grid Thing</h2>
-        <button class="large ui blue basic button" v-on:click="toggleGrid()">Hide/Reveal Grid</button>
-    </div>
-    <div id = "gridWrapper" v-if="showGrid()">
+    <!-- <div class="title"> -->
+        <!-- <h2>Ready Player One?</h2> -->
+        <!-- <button class="large ui blue basic button" v-on:click="toggleGrid()">Hide/Reveal Grid</button> -->
+    <!-- </div> -->
+    <div id = "gridWrapper">
         <div class="container">
             <h1>Prime Squares Game</h1>
-            <div class="scoreboard">
-                <h3 id="player-score">Player One:</h3>
-                <h3 id="computer-score">Player Two:</h3>
+            <div class=title>
+                <button class="large ui blue basic button" v-on:click="changeInstr()">Hide/Reveal Instructions</button>
             </div>
+            <div>
+                <div class="instr"v-if="showInstr()">
+                    <strong>Overview:</strong> <br/>
+                    <p> Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla euismod, eros dictum ultricies pharetra, turpis diam tincidunt nibh, ac posuere lorem lectus vel mauris. Duis sollicitudin mi purus, in vehicula</p>
+                    <!-- <strong>Phases:</strong> <br/>
+                    <ol>
+                        <li> The Detector looks away from the screen while the Badguy builds a tunnel.
+                            Maximum length of the tunnel is randomly generated,
+                            and will be specified before building begins.
+                            The tunnel needs to be a simple path with a start and end node on the top and bottom rows respectively.
+                            In order to construct the tunnel, the Badguy needs to click on the edges he wants to be a part of his tunnel.
+                            When he is content with the tunnel, he clicks on the "I finished my tunnel" button in the info panel and the tunnel will disappear. </li>
+                        <li> Now the Detector can begin detecting by placing probes on any number of intersections or edges. When the Detector is done,
+                            click the "Done placing first round of probes" button.
+                            If a given probe is on top of a part of the tunnel,
+                            the probe will turn green. Repeat this process up to two more times. </li>
+                        <li> The Detector selects what she believes is the location of the tunnel.
+                            When she is done, she clicks on the "Ready to submit final guess" button. </li>
+                    </ol> -->
+                    <p>Mauris sit amet leo tempor, posuere risus ut, facilisis nibh. Proin sagittis dignissim enim et porttitor. Donec vel odio et lacus dictum luctus. Donec sagittis egestas malesuada. Donec eros nunc, porta at velit a, mattis eleifend sem. Suspendisse potenti. Fusce id massa eu lectus finibus feugiat a eu lorem.</p>
+                </div>
+            </div>
+            <div class="scoreboard">
+                <h3 id="player_score">Player One:</h3>
+                <h3 id="player_two_score">Player Two:</h3>
+            </div>
+            <div class="button-holder">
+                <button onclick="start_game()">START GAME</button>
+                <button onclick="reset_board()">RESET BOARD</button>
+                <button onclick="reset_match()">RESET MATCH</button>
+                <!-- <button onclick="end_game()">END GAME</button> -->
+            </div>
+            <h3 id="player_turn"></h3>
             <div class="play-area">
                 <div id="0" class="block" onclick="addPlayerMove(0)"></div>
                 <div id="1" class="block" onclick="addPlayerMove(1)"></div>
@@ -151,11 +156,11 @@
                 <div id="7" class="block" onclick="addPlayerMove(7)"></div>
                 <div id="8" class="block" onclick="addPlayerMove(8)"></div>
             </div>
+            <div class="button-holder">
+                <button onclick="submit_move()">SUBMIT MOVE</button>
+            </div>
             <h2 id="winner"></h2>
             <div class="button-holder">
-                <button onclick="reset_board()">RESET BOARD</button>
-                <button onclick="reset_match()">RESET MATCH</button>
-                <button onclick="end_game()">END GAME</button>
                 <button onclick="toggle_primes()">SHOW/HIDE LIST OF PRIMES</button>
             </div>
             <h3 id="show_primes"></h3>
