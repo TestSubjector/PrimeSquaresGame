@@ -25,9 +25,9 @@
   }
   
   .scoreboard {
-    width: 40%;
+    width: 100%;
     justify-content: space-evenly;
-    display: flex;
+    display: inline;
     margin-bottom: 2em;
     font-size: 1.2rem;
   }
@@ -71,25 +71,25 @@
   [id="0"],
   [id="1"],
   [id="2"] {
-    border-top: 6px solid black;;
+    border-top: 6px solid black;
   }
   
   [id="0"],
   [id="3"],
   [id="6"] {
-    border-left: 6px solid black;;
+    border-left: 6px solid black;
   }
   
   [id="6"],
   [id="7"],
   [id="8"] {
-    border-bottom: 6px solid black;;
+    border-bottom: 6px solid black;
   }
   
   [id="2"],
   [id="5"],
   [id="8"] {
-    border-right: 6px solid black;;
+    border-right: 6px solid black;
   }
   
   .button-holder {
