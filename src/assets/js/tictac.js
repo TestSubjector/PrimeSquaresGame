@@ -1,8 +1,9 @@
 player = "O";
 computer = "X";
-
+playerTwo = "X";
 player_score = 0;
 computer_score = 0;
+counter = 0;
 
 board_full = false;
 winner_found = false;
@@ -19,7 +20,7 @@ initial_text_computer_score = html_computer_score.innerText;
 render_board = () => {
   play_board.forEach((element, index) => {
     html_board[index].innerText = play_board[index];
-    if (element == player || element == computer) {
+    if (element == player || element == playerTwo) {
       html_board[index].className += " " + "occupied";
     }
   });
@@ -28,7 +29,7 @@ render_board = () => {
 check_board_complete = () => {
   let flag = true;
   play_board.forEach(element => {
-    if (element != player && element != computer) {
+    if (element != player && element != playerTwo) {
       flag = false;
     }
   });
@@ -83,11 +84,11 @@ check_for_winner = () => {
   winner_found = check_match();
   if (winner_found == player) {
     player_score += 1;
-    winner.innerText = "Winner is player!!";
+    winner.innerText = "Winner is Player One!!";
     winner.classList.add("playerWin");
-  } else if (winner_found == computer) {
+  } else if (winner_found == playerTwo) {
     computer_score += 1;
-    winner.innerText = "Winner is computer";
+    winner.innerText = "Winner is Player Two";
     winner.classList.add("computerWin");
   } else if (board_full) {
     winner.innerText = "Draw!";
@@ -100,29 +101,30 @@ check_for_winner = () => {
 
 addPlayerMove = e => {
   if (!winner_found && play_board[e] == "") {
-    play_board[e] = player;
+    play_board[e] = (counter % 2 == 0 ? player : playerTwo);
+    counter++;
     render_board();
     check_board_complete();
     check_for_winner();
-    if (!board_full) {
-      addComputerMove();
-    }
+    // if (!board_full) {
+    //   addComputerMove();
+    // }
   } else {
   }
 };
 
-// addPlayerTwoMove = e => {
-//     if (!winner_found && play_board[e] == "") {
-//       play_board[e] = player;
-//       render_board();
-//       check_board_complete();
-//       check_for_winner();
-//       if (!board_full) {
-//         addComputerMove();
-//       }
-//     } else {
-//     }
-//   };
+addPlayerTwoMove = e => {
+    if (!winner_found && play_board[e] == "") {
+      play_board[e] = playerTwo;
+      render_board();
+      check_board_complete();
+      check_for_winner();
+    //   if (!board_full) {
+    //     addComputerMove();
+    //   }
+    } else {
+    }
+  };
 
 addComputerMove = () => {
   if (!winner_found) {
