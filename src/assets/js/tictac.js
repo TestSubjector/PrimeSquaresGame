@@ -7,6 +7,7 @@ last_move_index = -1;
 primes_showing = false;
 
 board_full = false;
+game_started = false;
 winner_found = false;
 play_board = [0, 0, 0, 0, 0, 0, 0, 0, 0];
 occupied = [3, 3, 3, 3, 3, 3, 3, 3, 3];
@@ -23,6 +24,16 @@ initial_text_player_two_score = player_two_score.innerText;
 render_board = () => {
     play_board.forEach((element, index) => {
         html_board[index].innerText = play_board[index].toString();
+        if (occupied[index] != 1 && occupied[index] != 2){
+            if (html_board[index].classList.contains("playerOne"))
+                html_board[index].classList.remove("playerOne");
+            if (html_board[index].classList.contains("playerTwo"))
+                html_board[index].classList.remove("playerTwo");
+        }
+        else if(occupied[index] == 1 && !html_board[index].classList.contains("playerOne"))
+            html_board[index].classList.add("playerOne");
+        else if(occupied[index] == 2 && !html_board[index].classList.contains("playerTwo"))
+            html_board[index].classList.add("playerTwo");
         // if (occupied[index] != 0)
         //     html_board[index].className += " " + "occupied";
         if ((last_move_index != -1 && index != last_move_index && occupied[index] == 0) || occupied[index] != 0)
@@ -31,6 +42,7 @@ render_board = () => {
 };
 
 loadup = () => {
+    game_started = false;
     play_board = [0, 0, 0, 0, 0, 0, 0, 0, 0];
     occupied = [3, 3, 3, 3, 3, 3, 3, 3, 3];
     last_move_index = -1;
@@ -40,6 +52,8 @@ loadup = () => {
     local_player_two_score = 0;
     initial_text_player_score = player_score.innerText;
     initial_text_player_two_score = player_two_score.innerText;
+    player_score.classList.add("playerOne");
+    player_two_score.classList.add("playerTwo");
     player_score.innerText = initial_text_player_score + " " + local_player_score.toString();
     player_two_score.innerText = initial_text_player_two_score + " " + local_player_two_score.toString();
 }
@@ -55,14 +69,15 @@ reset_board = () => {
         html_board[index].classList.remove("occupied");
         html_board[index].classList.remove("win");
     });
-    winner.classList.remove("playerWin");
-    winner.classList.remove("computerWin");
+    winner.classList.remove("playerOne");
+    winner.classList.remove("playerTwo");
     winner.innerText = "";
     player_turn.innerText = "Ready Player One?";
     render_board();
 };
 
 start_game = () => {
+    game_started = true;
     player_turn.innerText = "Ready Player One?";
     reset_board();
 }
@@ -128,15 +143,18 @@ check_for_winner = () => {
     winner_found = check_match();
     if (winner_found == player) {
         local_player_score += 1;
+        player_turn.innerText = "";
         winner.innerText = "Winner is Player One!!";
-        winner.classList.add("playerWin");
+        winner.classList.add("playerOne");
         winner_found_now();
     } else if (winner_found == player_two) {
         local_player_two_score += 1;
+        player_turn.innerText = "";
         winner.innerText = "Winner is Player Two";
-        winner.classList.add("computerWin");
+        winner.classList.add("playerTwo");
         winner_found_now();
     } else if (board_full) {
+        player_turn.innerText = "";
         winner.innerText = "Draw!";
         winner.classList.add("draw");
         winner_found_now();
@@ -146,27 +164,24 @@ check_for_winner = () => {
 };
 
 addPlayerMove = e => {
+    if (!game_started){
+        alert("Uhh... You need to start the game first");
+        return;
+    }
     if (winner_found == 0 && occupied[e] == 0) {
         if (last_move_index != -1 && last_move_index != e){
             alert("Sorry! You can't update this index as you've already made your grid index choice...");
             return;
         }
-        // if (last_move_index != -1 && last_move_index != e){
-        //     occupied[last_move_index] = (counter % 2) + 1;
-        //     last_move_index = e;
-        //     counter++;
-        // }
         play_board[e] = (play_board[e] + 1) % 10;
         last_move_index = e;
         player_turn.innerText = "Ready Player " + ((counter % 2) == 0? "One?" : "Two?");
         render_board();
-        check_for_winner();
         return;
     }
 };
 
 submit_move = () => {
-    // return;
     occupied[last_move_index] = (counter % 2) + 1;
     last_move_index = -1;
     ++counter;

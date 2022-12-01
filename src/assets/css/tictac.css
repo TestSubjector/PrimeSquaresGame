@@ -115,12 +115,12 @@
     color: white;
   }
   
-  .playerWin {
-    color: green;
+  .playerOne {
+    color: rgb(42, 8, 231);
   }
   
-  .computerWin {
-    color: red;
+  .playerTwo {
+    color: rgb(255, 119, 0);
   }
   
   .draw {
