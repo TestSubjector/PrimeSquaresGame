@@ -25,17 +25,14 @@ render_board = () => {
     play_board.forEach((element, index) => {
         html_board[index].innerText = play_board[index].toString();
         if (occupied[index] != 1 && occupied[index] != 2){
-            if (html_board[index].classList.contains("playerOne"))
-                html_board[index].classList.remove("playerOne");
-            if (html_board[index].classList.contains("playerTwo"))
-                html_board[index].classList.remove("playerTwo");
+            html_board[index].classList.remove("playerOne");
+            html_board[index].classList.remove("playerTwo");
         }
-        else if(occupied[index] == 1 && !html_board[index].classList.contains("playerOne"))
+        else if(occupied[index] == 1)
             html_board[index].classList.add("playerOne");
-        else if(occupied[index] == 2 && !html_board[index].classList.contains("playerTwo"))
+        else if(occupied[index] == 2)
             html_board[index].classList.add("playerTwo");
-        // if (occupied[index] != 0)
-        //     html_board[index].className += " " + "occupied";
+
         if ((last_move_index != -1 && index != last_move_index && occupied[index] == 0) || occupied[index] != 0)
             html_board[index].className += " " + "occupied";
     });
@@ -84,51 +81,56 @@ start_game = () => {
 
 check_if_prime = num => {
     for (j = 2; j <= Math.sqrt(num); ++j){
-        if (num % j == 0) return false;
+        if (num % j == 0) return 0;
     }
-    return true;
+    return 1;
 };
 
 check_line = (a, b, c) => {
-    if (occupied[a] != occupied[b] || occupied[b] != occupied[c]) return false;
-    if (occupied[a] == 0) return false;
+    if (occupied[a] == 0 || occupied[b] == 0 || occupied[c] == 0) return 0;
     return (
         check_if_prime(play_board[a]* 100 + play_board[b] * 10 + play_board[c])
-        ||
+        +
         check_if_prime(play_board[c]* 100 + play_board[b] * 10 + play_board[a])
     );
 };
 
 check_match = () => {
+    let prime_count = 0, current_count = 0;
     for (i = 0; i < 9; i += 3) {
-        if (check_line(i, i + 1, i + 2)) {
+        current_count = check_line(i, i + 1, i + 2);
+        prime_count += current_count;
+        if (current_count > 0) {
             html_board[i].classList.add("win");
             html_board[i + 1].classList.add("win");
             html_board[i + 2].classList.add("win");
-            return occupied[i];
         }
     }
     for (i = 0; i < 3; i++) {
-        if (check_line(i, i + 3, i + 6)) {
+        current_count = check_line(i, i + 3, i + 6);
+        prime_count += current_count;
+        if (current_count > 0) {
             html_board[i].classList.add("win");
             html_board[i + 3].classList.add("win");
             html_board[i + 6].classList.add("win");
-            return occupied[i];
+            prime_count += current_count;
         }
     }
-    if (check_line(0, 4, 8)) {
+    current_count = check_line(0, 4, 8);
+    if (current_count > 0) {
         html_board[0].classList.add("win");
         html_board[4].classList.add("win");
         html_board[8].classList.add("win");
-        return occupied[0];
+        prime_count += current_count;
     }
-    if (check_line(2, 4, 6)) {
+    current_count = check_line(2, 4, 6);
+    if (current_count > 0) {
         html_board[2].classList.add("win");
         html_board[4].classList.add("win");
         html_board[6].classList.add("win");
-        return occupied[2];
+        prime_count += current_count;
     }
-    return "";
+    return prime_count;
 };
 
 winner_found_now = () => {
@@ -139,26 +141,24 @@ winner_found_now = () => {
       });
 }
 
-check_for_winner = () => {
-    winner_found = check_match();
-    if (winner_found == player) {
-        local_player_score += 1;
-        player_turn.innerText = "";
-        winner.innerText = "Winner is Player One!!";
-        winner.classList.add("playerOne");
-        winner_found_now();
-    } else if (winner_found == player_two) {
-        local_player_two_score += 1;
-        player_turn.innerText = "";
-        winner.innerText = "Winner is Player Two";
-        winner.classList.add("playerTwo");
-        winner_found_now();
-    } else if (board_full) {
-        player_turn.innerText = "";
-        winner.innerText = "Draw!";
-        winner.classList.add("draw");
-        winner_found_now();
+get_player = () => {
+    if (counter < 8)
+        return (counter % 2) + 1;
+    return 2;
+}
+
+update_scores = () => {
+    primes_found = check_match();
+    if (primes_found > 0) {
+        if (get_player() == 1)
+            local_player_score += primes_found;
+        else
+            local_player_two_score += primes_found;
     }
+    // if (primes_found > 0)
+    //     player_turn.innerText = "Well Done! Player " + (get_player() == 1 ? "One " : "Two ") + "earned " + primes_found.toString() + "points!";
+    // else
+    //     player_turn.innerText = "No points earned in this turn...";
     player_score.innerText = initial_text_player_score + " " + local_player_score.toString();
     player_two_score.innerText = initial_text_player_two_score + " " + local_player_two_score.toString();
 };
@@ -168,43 +168,66 @@ addPlayerMove = e => {
         alert("Uhh... You need to start the game first");
         return;
     }
-    if (winner_found == 0 && occupied[e] == 0) {
+    if (board_full){
+        alert("Game is over. Please start a new game.");
+        return;
+    }
+    if (!board_full && occupied[e] == 0) {
         if (last_move_index != -1 && last_move_index != e){
             alert("Sorry! You can't update this index as you've already made your grid index choice...");
             return;
         }
         play_board[e] = (play_board[e] + 1) % 10;
         last_move_index = e;
-        player_turn.innerText = "Ready Player " + ((counter % 2) == 0? "One?" : "Two?");
+        play_board.forEach((element, index) => {
+            html_board[index].classList.remove("win");
+        });
         render_board();
         return;
     }
 };
 
-submit_move = () => {
-    occupied[last_move_index] = (counter % 2) + 1;
+check_board_complete = () => {
+    board_full = true;
+    play_board.forEach((element,index) => {
+        if (occupied[index] == 0)
+            board_full = false;
+    });
+    if (board_full){
+        player_turn.innerText = "Game Over!";
+        if (local_player_score > local_player_two_score){
+            winner.innerText = "Player One Wins!!";
+            winner.classList.add("playerOne");
+        }
+        else if (local_player_score < local_player_two_score){
+            winner.innerText = "Player Two Wins!!";
+            winner.classList.add("playerTwo");
+        }
+        else{
+            winner.innerText = "Draw!";
+            winner.classList.add("draw");
+        }
+    }
+};
+
+submit_move = () => { // TODO: 0 shouldn't be there in an edge node
+    occupied[last_move_index] = get_player();
+    player_turn.innerText = "Ready Player " + ((counter % 2) == 0? "Two?" : "One?");
+    if (counter >= 7){
+        occupied[last_move_index] = 2;
+        player_turn.innerText = "Ready Player Two?";
+    }
     last_move_index = -1;
-    ++counter;
-    player_turn.innerText = "Ready Player " + ((counter % 2) == 0? "One?" : "Two?");
     play_board.forEach((element, index) => {
         if (occupied[index] == 0)
-            html_board[index].classList.remove("occupied");
+        html_board[index].classList.remove("occupied");
     });
+    update_scores();
     render_board();
     check_board_complete();
-    check_for_winner();
+    // check_for_winner();
+    ++counter;
 }
-
-check_board_complete = () => {
-    let flag = true;
-    play_board.forEach((element,index) => {
-        if (element == 0) {
-            flag = false;
-        }
-    });
-    if (flag == false) board_full = false;
-    else board_full = true;
-};
 
 reset_match = () => {
     reset_board();
@@ -212,15 +235,6 @@ reset_match = () => {
     local_player_two_score = 0;
     player_score.innerText = initial_text_player_score + " " + local_player_score.toString();
     player_two_score.innerText = initial_text_player_two_score + " " + local_player_two_score.toString();
-};
-
-print_stuff = () => {
-    // html_board[9].innerText = occupied[last_move_index].toString() + " this";
-    out_string = "; "
-    for (k = 0; k < 8; ++k) out_string = out_string + (occupied[k].toString() + ",")
-    out_string += occupied[8].toString()
-    debug_print.innerText = "last:" + last_move_index.toString() + out_string
-    // document.getElementById("demo").innerHTML = occupied[last_move_index].toString() + " this";;
 };
 
 toggle_primes = () => {
