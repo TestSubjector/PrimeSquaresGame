@@ -71,25 +71,25 @@
   [id="0"],
   [id="1"],
   [id="2"] {
-    border-top: none;
+    border-top: 6px solid black;;
   }
   
   [id="0"],
   [id="3"],
   [id="6"] {
-    border-left: none;
+    border-left: 6px solid black;;
   }
   
   [id="6"],
   [id="7"],
   [id="8"] {
-    border-bottom: none;
+    border-bottom: 6px solid black;;
   }
   
   [id="2"],
   [id="5"],
   [id="8"] {
-    border-right: none;
+    border-right: 6px solid black;;
   }
   
   .button-holder {
