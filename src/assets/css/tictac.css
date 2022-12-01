@@ -126,3 +126,11 @@
   .draw {
     color: darkorange;
   }
+
+  .lastMovePlayerOne{
+    background: rgb(168, 161, 208);
+  }
+
+  .lastMovePlayerTwo{
+    background: rgb(224, 187, 154);
+  }

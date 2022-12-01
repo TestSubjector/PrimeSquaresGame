@@ -67,6 +67,8 @@ reset_board = () => {
     play_board.forEach((element, index) => {
         html_board[index].classList.remove("occupied");
         html_board[index].classList.remove("win");
+        html_board[index].classList.remove("lastMovePlayerOne");
+        html_board[index].classList.remove("lastMovePlayerTwo");
     });
     winner.classList.remove("playerOne");
     winner.classList.remove("playerTwo");
@@ -164,10 +166,14 @@ update_scores = () => {
         else
             local_player_two_score += primes_found;
     }
-    // if (primes_found > 0)
-    //     player_turn.innerText = "Well Done! Player " + (get_player() == 1 ? "One " : "Two ") + "earned " + primes_found.toString() + "points!";
-    // else
-    //     player_turn.innerText = "No points earned in this turn...";
+    if (primes_found > 0){
+        winner.innerText = "Well Done! Player " + (get_player() == 1 ? "One " : "Two ") + "earned " + primes_found.toString() + " points!\n";
+        winner.classList.add((get_player() == 1? "playerOne" : "playerTwo"));
+    }
+    else
+        winner.innerText = "No points earned in this turn...\n";
+    html_board[last_move_index].classList.remove("win");
+    html_board[last_move_index].classList.add((get_player() == 1? "lastMovePlayerOne" : "lastMovePlayerTwo"));
     player_score.innerText = initial_text_player_score + " " + local_player_score.toString();
     player_two_score.innerText = initial_text_player_two_score + " " + local_player_two_score.toString();
 };
@@ -183,14 +189,19 @@ addPlayerMove = e => {
     }
     if (!board_full && occupied[e] == 0) {
         if (last_move_index != -1 && last_move_index != e){
-            alert("Sorry! You can't update this index as you've already made your grid index choice...");
+            alert("You can either submit your current move or change the value. Selected square can't be changed now...");
             return;
         }
         play_board[e] = (play_board[e] + 1) % 10;
         last_move_index = e;
         play_board.forEach((element, index) => {
             html_board[index].classList.remove("win");
+            html_board[index].classList.remove("lastMovePlayerOne");
+            html_board[index].classList.remove("lastMovePlayerTwo");
         });
+        winner.innerText = "";
+        winner.classList.remove("playerOne");
+        winner.classList.remove("playerTwo");
         render_board();
         return;
     }
@@ -205,11 +216,11 @@ check_board_complete = () => {
     if (board_full){
         player_turn.innerText = "Game Over!";
         if (local_player_score > local_player_two_score){
-            winner.innerText = "Player One Wins!!";
+            winner.innerText += "Player One Wins!!";
             winner.classList.add("playerOne");
         }
         else if (local_player_score < local_player_two_score){
-            winner.innerText = "Player Two Wins!!";
+            winner.innerText += "Player Two Wins!!";
             winner.classList.add("playerTwo");
         }
         else{
@@ -226,12 +237,12 @@ submit_move = () => { // TODO: 0 shouldn't be there in an edge node
         occupied[last_move_index] = 2;
         player_turn.innerText = "Ready Player Two?";
     }
-    last_move_index = -1;
     play_board.forEach((element, index) => {
         if (occupied[index] == 0)
         html_board[index].classList.remove("occupied");
     });
     update_scores();
+    last_move_index = -1;
     render_board();
     check_board_complete();
     // check_for_winner();
