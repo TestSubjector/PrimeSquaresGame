@@ -100,42 +100,54 @@ check_if_prime = num => {
     return 1;
 };
 
-create_number = (num1, num2, num3) => {
-    return (num1 * 100 + num2 * 10 + num3);
+create_number = numbers_list => {
+    numbers_length = numbers_list.length;
+    new_number = 0;
+    for (j = numbers_length - 1; j >=0; j--)
+        new_number += numbers_list[j] * (10 ** j);
+    return new_number;
 }
 
-check_line = (a, b, c) => {
-    if (occupied[a] == 0 || occupied[b] == 0 || occupied[c] == 0) return 0;
+check_line = indices_list => {
+    indices_length = indices_list.length;
+    for (j = 0; j < indices_length; ++j)
+        if (occupied[indices_list[j]] == 0) return 0;
+    const list1 = []
+    for (j = 0; j < indices_length; ++j)
+        list1.push(play_board[indices_list[j]]);
+    const list2 = []
+    for (j = indices_length - 1; j >= 0; --j)
+        list2.push(play_board[indices_list[j]]);
     return (
-        check_if_prime(create_number(play_board[a], play_board[b], play_board[c]))
+        check_if_prime(create_number(list1))
         +
-        check_if_prime(create_number(play_board[c], play_board[b], play_board[a]))
+        check_if_prime(create_number(list2))
     );
 };
 
 check_match = () => {
     let prime_count = 0, current_count = 0;
     for (i = 0; i < 9; i += 3) {
-        current_count = check_line(i, i + 1, i + 2);
-        if (current_count > 0 && !found_primes.has(create_number(i, i+1, i+2))) {
+        current_count = check_line([i, i + 1, i + 2]);
+        if (current_count > 0 && !found_primes.has(create_number([i, i+1, i+2]))) {
             html_board[i].classList.add("win");
             html_board[i + 1].classList.add("win");
             html_board[i + 2].classList.add("win");
-            found_primes.add(create_number(i, i+1, i+2));
+            found_primes.add(create_number([i, i+1, i+2]));
             prime_count += current_count;
         }
     }
     for (i = 0; i < 3; i++) {
-        current_count = check_line(i, i + 3, i + 6);
-        if (current_count > 0 && !found_primes.has(create_number(i, i+3, i+6))) {
+        current_count = check_line([i, i + 3, i + 6]);
+        if (current_count > 0 && !found_primes.has(create_number([i, i+3, i+6]))) {
             html_board[i].classList.add("win");
             html_board[i + 3].classList.add("win");
             html_board[i + 6].classList.add("win");
-            found_primes.add(create_number(i, i+3, i+6));
+            found_primes.add(create_number([i, i+3, i+6]));
             prime_count += current_count;
         }
     }
-    current_count = check_line(0, 4, 8);
+    current_count = check_line([0, 4, 8]);
     if (current_count > 0 && !found_primes.has(48)) {
         html_board[0].classList.add("win");
         html_board[4].classList.add("win");
@@ -143,12 +155,40 @@ check_match = () => {
         found_primes.add(48);
         prime_count += current_count;
     }
-    current_count = check_line(2, 4, 6);
+    current_count = check_line([2, 4, 6]);
     if (current_count > 0 && !found_primes.has(246)) {
         html_board[2].classList.add("win");
         html_board[4].classList.add("win");
         html_board[6].classList.add("win");
-        found_primes.add(create_number(246));
+        found_primes.add(246);
+        prime_count += current_count;
+    }
+    current_count = check_line([1, 3]);
+    if (current_count > 0 && !found_primes.has(13)) {
+        html_board[1].classList.add("win");
+        html_board[3].classList.add("win");
+        found_primes.add(13);
+        prime_count += current_count;
+    }
+    current_count = check_line([1, 5]);
+    if (current_count > 0 && !found_primes.has(15)) {
+        html_board[1].classList.add("win");
+        html_board[5].classList.add("win");
+        found_primes.add(15);
+        prime_count += current_count;
+    }
+    current_count = check_line([3, 7]);
+    if (current_count > 0 && !found_primes.has(37)) {
+        html_board[3].classList.add("win");
+        html_board[7].classList.add("win");
+        found_primes.add(37);
+        prime_count += current_count;
+    }
+    current_count = check_line([5, 7]);
+    if (current_count > 0 && !found_primes.has(57)) {
+        html_board[5].classList.add("win");
+        html_board[7].classList.add("win");
+        found_primes.add(57);
         prime_count += current_count;
     }
     return prime_count;
@@ -241,6 +281,10 @@ check_board_complete = () => {
 };
 
 submit_move = () => { // TODO: 0 shouldn't be there in an edge node
+    if (last_move_index == -1){
+        alert("Need to put some number somewhere...");
+        return;
+    }
     occupied[last_move_index] = get_player();
     player_turn.innerText = "Ready Player " + ((counter % 2) == 0? "Two?" : "One?");
     if (counter >= 7){
@@ -266,15 +310,15 @@ toggle_primes = () => {
 }
 
 show_all_primes = () => {
-    show_primes.innerText = "Here is a list of primes between 100 and 999:\n101 103\n\
-    107 109 113 127 131 137 139 149 151 157 163 167 173 179 181 191 193 197 199 211\n\
-    223 227 229 233 239 241 251 257 263 269 271 277 281 283 293 307 311 313 317 331\n\
-    337 347 349 353 359 367 373 379 383 389 397 401 409 419 421 431 433 439 443 449\n\
-    457 461 463 467 479 487 491 499 503 509 521 523 541 547 557 563 569 571 577 587\n\
-    593 599 601 607 613 617 619 631 641 643 647 653 659 661 673 677 683 691 701 709\n\
-    719 727 733 739 743 751 757 761 769 773 787 797 809 811 821 823 827 829 839 853\n\
-    857 859 863 877 881 883 887 907 911 919 929 937 941 947 953 967 971 977 983 991\n\
-    997\n\
+    show_primes.innerText = "Here is a list of primes between 100 and 999:\n\
+    101 103 107 109 113 127 131 137 139 149 151 157 163 167 173 179 181 191 193 197\n\
+    199 211 223 227 229 233 239 241 251 257 263 269 271 277 281 283 293 307 311 313\n\
+    317 331 337 347 349 353 359 367 373 379 383 389 397 401 409 419 421 431 433 439\n\
+    443 449 457 461 463 467 479 487 491 499 503 509 521 523 541 547 557 563 569 571\n\
+    577 587 593 599 601 607 613 617 619 631 641 643 647 653 659 661 673 677 683 691\n\
+    701 709 719 727 733 739 743 751 757 761 769 773 787 797 809 811 821 823 827 829\n\
+    839 853 857 859 863 877 881 883 887 907 911 919 929 937 941 947 953 967 971 977\n\
+    983 991 997\
     ";
 };
 
