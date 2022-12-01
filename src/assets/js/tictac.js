@@ -280,9 +280,13 @@ check_board_complete = () => {
     }
 };
 
-submit_move = () => { // TODO: 0 shouldn't be there in an edge node
+submit_move = () => {
     if (last_move_index == -1){
         alert("Need to put some number somewhere...");
+        return;
+    }
+    if (play_board[last_move_index] == 0 && last_move_index != 4){
+        alert("0 must not be placed in a square that lies on the edge of the grid.");
         return;
     }
     occupied[last_move_index] = get_player();
