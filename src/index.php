@@ -2,8 +2,8 @@
 // Filename of your index page
 $index = "iframe.html";
 // Metadata
-$game = "Temp";
-$team = "Team WA";
+$game = "Prime Squares Game";
+$team = "Team KitKat Addicts";
 $instruction = <<<EOD
 <strong>Overview:</strong> <br/>
 <p> Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla euismod, eros dictum ultricies pharetra, turpis diam tincidunt nibh, ac posuere lorem lectus vel mauris. Duis sollicitudin mi purus, in vehicula</p>
