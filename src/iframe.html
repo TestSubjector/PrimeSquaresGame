@@ -10,23 +10,22 @@
     <script src="assets/css/semantic.min.js" type="text/javascript" ></script>
     <link rel="stylesheet" type="text/css" href="assets/css/main.css">
     <link rel="stylesheet" type="text/css" href="assets/css/animate.css">
+    <link rel="stylesheet" type="text/css" href="assets/css/tictac.css">
 </head>
 
 <body>
 
 <div id="gameArea">
-    <div class =title>
-        <h2>Dig That</h2>
+    <div class=title>
+        <h2>Temp</h2>
         <button class="large ui blue basic button" v-on:click="changeInstr()">Hide/Reveal Instructions</button>
     </div>
 
     <div>
         <div class="instr"v-if="showInstr()">
             <strong>Overview:</strong> <br/>
-            <p> Dig That is a two-player game between a Badguy and a Detector.
-                The Badguy builds an explosive tunnel under the city and it is the role of the Detector to detect the tunnel.
-                Two people can play, or one person can play Detector and the computer will be the Badguy.</p>
-            <strong>Phases:</strong> <br/>
+            <p> Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla euismod, eros dictum ultricies pharetra, turpis diam tincidunt nibh, ac posuere lorem lectus vel mauris. Duis sollicitudin mi purus, in vehicula</p>
+            <!-- <strong>Phases:</strong> <br/>
             <ol>
                 <li> The Detector looks away from the screen while the Badguy builds a tunnel.
                     Maximum length of the tunnel is randomly generated,
@@ -40,27 +39,27 @@
                     the probe will turn green. Repeat this process up to two more times. </li>
                 <li> The Detector selects what she believes is the location of the tunnel.
                     When she is done, she clicks on the "Ready to submit final guess" button. </li>
-            </ol>
-            <p>If the Detector correctly detected the tunnel, her score is (intersection probes + edge probes) she used. If she incorrectly detected the tunnel, then she gets a score of infinity. Now the two players reverse roles. The winner is the player with the lowest score. </p>
+            </ol> -->
+            <p>Mauris sit amet leo tempor, posuere risus ut, facilisis nibh. Proin sagittis dignissim enim et porttitor. Donec vel odio et lacus dictum luctus. Donec sagittis egestas malesuada. Donec eros nunc, porta at velit a, mattis eleifend sem. Suspendisse potenti. Fusce id massa eu lectus finibus feugiat a eu lorem.</p>
         </div>
     </div>
-    <div id = "infoPanel">
+    <div id = "infoPanel" v-if="showInfoPanel()">
         <button class="large ui green basic button" v-on:click="gotoBegin()">Start from beginning</button>
         <div id = "basicInfoTwoPlayer" v-if="showBasicInfoPvP()">
-            <h2> P1 Score: {{scoreTwo}} P2 Score:{{scoreOne}} (smaller is better) </h2>
+            <h2> P1 Score: {{scoreTwo}} P2 Score:{{scoreOne}} (larger is better) </h2>
             <h2> It's {{gameStatus}} now </h2>
         </div>
 
-        <div id = "basicInfoAI" v-if="showBasicInfoAI()">
-            <h2> Your Score:{{scoreTwo}} (smaller is better) </h2>
+        <!-- <div id = "basicInfoAI" v-if="showBasicInfoAI()">
+            <h2> Your Score:{{scoreTwo}} (larger is better) </h2>
             <h2> It's {{gameStatus}} now </h2>
-        </div>
+        </div> -->
 
         <div class="configureTool" v-if="showModeSelect()">
-            <select class="ui search dropdown" v-model="mode">
+            <!-- <select class="ui search dropdown" v-model="mode">
                 <option>AI</option>
                 <option>PvP</option>
-            </select>
+            </select> -->
 
             <select class="ui search dropdown" v-model="size">
                 <option v-for="sizeReal in sizes" v-bind:value="sizeReal">
@@ -68,15 +67,15 @@
                 </option>
             </select>
 
-            <select class="ui search dropdown" v-model="difficulty">
+            <!-- <select class="ui search dropdown" v-model="difficulty">
                 <option>Easy</option>
                 <option>Normal</option>
-            </select>
+            </select> -->
 
             <button class="large ui blue basic button" v-on:click="startGame()">Start Game! </button>
         </div>
 
-        <div v-if="showBetweenGameInfo()">
+        <!-- <div v-if="showBetweenGameInfo()">
             <button class="large ui violet basic button" v-on:click="revealBoard()">{{reveal}}</button>
             <button class="large ui olive basic button" v-on:click="startNextRound()">Start Next Round</button>
             <div class="startSameGame">
@@ -86,7 +85,7 @@
                 </select>
                 <button class="large ui pink basic button" v-on:click="startSameGame()">Start a new single game with this tunnel</button>
             </div>
-        </div>
+        </div> -->
 
         <div v-if="showSaveButton()">
             <h2>Winner is {{getWinner()}}</h2>
@@ -94,17 +93,17 @@
                 <input type="text" placeholder="Enter Your Name.." v-model="winnerName">
                 <button  class="large ui green basic button" id="score" v-on:click="saveScore()">Save Score</button>
             </div>
-            <button class="large ui violet basic button" v-on:click="revealBoard()">{{reveal}}</button>
-            <div class="startSameGame">
-                <select class="ui search dropdown" v-model="difficulty">
+            <!-- <button class="large ui violet basic button" v-on:click="revealBoard()">{{reveal}}</button> -->
+            <div class="startGame">
+                <!-- <select class="ui search dropdown" v-model="difficulty">
                     <option>Easy</option>
                     <option>Normal</option>
-                </select>
-                <button class="large ui pink basic button" v-on:click="startSameGame()">Start a new single game with this tunnel</button>
+                </select> -->
+                <button class="large ui pink basic button" v-on:click="startGame()">Start a new game</button>
             </div>
         </div>
 
-        <div id="tunnelInfo">
+        <!-- <div id="tunnelInfo">
             <transition name="fade">
                 <div id="edgeInfo" v-if="showEdgeInfo()">
                     <h2>Max edges: {{maxEdge()}} Edges left: {{edgeLeft()}} Isvalid: {{isValid()}}</h2>
@@ -113,9 +112,9 @@
                 </div>
             </transition>
 
-        </div>
+        </div> -->
 
-        <div class="guessInfo">
+        <!-- <div class="guessInfo">
             <transition name="fade">
                 <div id="guessInfo" v-if="showGuessInfo()">
                     <h2>Guess round {{guessRound}} of 3</h2>
@@ -128,10 +127,47 @@
                     <button class="large ui basic green button" v-on:click="finishGuess()">Finish Guess</button>
                 </div>
             </transition>
-        </div>
+        </div> -->
     </div>
-
-    <div id="gridWrapper">
+    <div class="title">
+        <h2>Grid Thing</h2>
+        <button class="large ui blue basic button" v-on:click="toggleGrid()">Hide/Reveal Grid</button>
+    </div>
+    <div id = "gridWrapper" v-if="showGrid()">
+        <div class="container">
+            <h1>Tic-Tac-Toe</h1>
+            <div class="scoreboard">
+                <h3 id="player-score">Player:</h3>
+                <h3 id="computer-score">Computer:</h3>
+            </div>
+            <div class="play-area">
+                <div id="0" class="block" onclick="addPlayerMove(0)"></div>
+                <div id="1" class="block" onclick="addPlayerMove(1)"></div>
+                <div id="2" class="block" onclick="addPlayerMove(2)"></div>
+                <div id="3" class="block" onclick="addPlayerMove(3)"></div>
+                <div id="4" class="block" onclick="addPlayerMove(4)"></div>
+                <div id="5" class="block" onclick="addPlayerMove(5)"></div>
+                <div id="6" class="block" onclick="addPlayerMove(6)"></div>
+                <div id="7" class="block" onclick="addPlayerMove(7)"></div>
+                <div id="8" class="block" onclick="addPlayerMove(8)"></div>
+            </div>
+            <h2 id="winner"></h2>
+            <div class="button-holder">
+                <button onclick="reset_board()">RESET BOARD</button>
+                <button onclick="reset_match()">RESET MATCH</button>
+            </div>
+        </div>
+        <script src="assets/js/tictac.js"></script>
+    </div>
+    <!-- <div id="gridWrapper" v-if="showGrid()">
+        <template v-for = "m in size + 1" >
+            <div class = nodeWrapper>
+                <template v-for="n in size + 1">
+                    <div v-bind:class="nodes[m-1][n-1].class" v-on:click="nodeClick(nodes[m-1][n-1])">
+                    </div>
+                </template>
+            </div>
+        </template>
         <template v-for = "m in size + 1" >
             <div class = hedgeWrapper>
                 <template v-for="n in size + 1">
@@ -146,7 +182,7 @@
                 </div>
             </div>
         </template>
-    </div>
+    </div> -->
 </div>
 
 <script type="text/javascript" src="assets/js/bundle.js" charset="utf-8"></script>

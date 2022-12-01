@@ -2,29 +2,53 @@ var hedges = [[]];
 var vedges = [[]];
 var nodes = [[]];
 
-var initMap = function (length) {
-    hedges = new Array(length+1);
-    vedges = new Array(length);
+var initMap = function (length) { // Now Processed
     nodes = new Array(length + 1);
-    for (var i = 0; i < length + 1; i++) {
+    hedges = new Array(length + 1);
+    vedges = new Array(length + 1);
+    for (var i = 0; i < length + 1; ++i){
         nodes[i] = new Array(length + 1);
-        for (var j = 0; j < length + 1; j++) {
+        for (var j = 0; j < length + 1; ++j){
             nodes[i][j] = {
                 class: {
                     node: true,
-                    probe: true,
+                    probe: false,
                     prepare: false,
-                    probeAnim: true,
+                    probeAnim: false,
+                    animate:false,
+                    // filled: false,
                     bad: false
                 },
                 x: i,
                 y: j,
                 selected: 0,
-                level: 0,
-                bfsColor: 0
+                value: 0
             };
         }
     }
+
+    // for (var i = 0; i < length + 1; i++) {
+    //     hedges[i] = new Array(length);
+    //     for (var j = 0; j < length; j++) {
+    //         hedges[i][j] = {
+    //             class: {
+    //                 hedge: true,
+    //                 edge: true,
+    //                 animate: false,
+    //                 final: false,
+    //                 prepare: false,
+    //                 reveal: false,
+    //                 bad: false
+    //             },
+    //             type: "hedge",
+    //             x: i,
+    //             y: j,
+    //             selected: 0,
+    //             // level: 0,
+    //             bfsColor: 0
+    //         };
+    //     }
+    // }
 
     for (var i = 0; i < length + 1; i++) {
         hedges[i] = new Array(length);
@@ -78,13 +102,13 @@ module.exports = function(length){
         vedges: vedges,
         nodes: nodes,
 
-        prepare: function (element) {
+        prepare: function (element) { //TODO: Process
             if (!element.class.reveal && !element.class.bad) {
                 element.class.prepare = !element.class.prepare;
             }
         },
 
-        reveal: function (element, type) {
+        reveal: function (element, type) { //TODO: Process
             element.class.prepare = false;
             if(type == "good"){
                 element.class.reveal = true;
@@ -94,19 +118,19 @@ module.exports = function(length){
 
         },
 
-        selectEdge: function (edge) {
+        selectEdge: function (edge) { //TODO: Process
             edge.class.animate = !edge.class.animate;
         },
 
-        totalClearBoard: function () {
+        totalClearBoard: function () { // Processed
             var i, j;
             for (i = 0; i < hedges.length; i++) {
                 var line = hedges[i];
                 for (j = 0; j < line.length; j++) {
-                    line[j].class.animate = false;
-                    line[j].class.prepare = false;
-                    line[j].class.bad = false;
-                    line[j].class.reveal = false;
+                    // line[j].class.animate = false;
+                    // line[j].class.prepare = false;
+                    // line[j].class.bad = false;
+                    // line[j].class.reveal = false;
                     line[j].selected = 0;
                 }
             }
@@ -114,10 +138,10 @@ module.exports = function(length){
             for (i = 0; i < vedges.length; i++) {
                 line = vedges[i];
                 for (j = 0; j < line.length; j++) {
-                    line[j].class.animate = false;
-                    line[j].class.prepare = false;
-                    line[j].class.bad = false;
-                    line[j].class.reveal = false;
+                    // line[j].class.animate = false;
+                    // line[j].class.prepare = false;
+                    // line[j].class.bad = false;
+                    // line[j].class.reveal = false;
                     line[j].selected = 0;
                 }
 
@@ -125,17 +149,19 @@ module.exports = function(length){
             for (i = 0; i < nodes.length; i++) {
                 line = nodes[i];
                 for (j = 0; j < line.length; j++) {
-                    line[j].class.animate = false;
-                    line[j].class.prepare = false;
-                    line[j].class.bad = false;
-                    line[j].class.reveal = false;
+                    // line[j].class.animate = false;
+                    // line[j].class.prepare = false;
+                    // line[j].class.bad = false;
+                    // line[j].class.reveal = false;
+                    line[j].class.filled = false;
                     line[j].selected = 0;
+                    line[j].value = 0;
                 }
             }
 
         },
 
-        clearBoard: function () {
+        clearBoard: function () { //TODO: Process
             var i, j;
             for (i = 0; i < hedges.length; i++) {
                 var line = hedges[i];

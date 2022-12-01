@@ -162,8 +162,8 @@ var tryGo = function (startEdge){
 
 module.exports = function (length) {
     mapLength = length;
-    size = Math.floor(Math.random() * (4 * length - 2 * length)) + 2 * length;
-    tunnel = [];
+    // size = Math.floor(Math.random() * (4 * length - 2 * length)) + 2 * length; // TODO: Remove
+    tunnel = []; // TODO: Remove
     return{
         //Adding tunneling APIs
         getSize: function () {

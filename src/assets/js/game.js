@@ -1,30 +1,30 @@
 var MapFile = require('./map');
 var TunnelFile = require('./tunnel');
 var Vue = require('./lib/vue.js');
-var SaverFile = require('./saver');
-var Saver = SaverFile();
+// var SaverFile = require('./saver');
+// var Saver = SaverFile();
 var Map = MapFile(4);
 var Tunnel = TunnelFile(20);
-var PriviousTunnel = [];
 var game = new Vue({
     el: '#gameArea',
     data: {
         size : 4,
         maxSize: 10,
-        sizes : [4,5,6,7,8,9,10],
+        sizes : [3,4,5,6,7,8,9,10],
         nodes: Map.nodes,
         hedges: Map.hedges,
         vedges: Map.vedges,
         instr: false,
+        showTheGrid: false,
         winnerName: "",
-        gameStatus: "mode selection",
-        guessRound: 1,
-        gameRound: 1,
+        gameStatus: "selection of game parameters",
+        guessRound: 1, // TODO: remove
+        gameRound: 1, // TODO: remove
         mode : "PvP",
-        difficulty : "Normal",
+        // difficulty : "Normal", // TODO: remove
         scoreOne: 0,
         scoreTwo: 0,
-        reveal: "Reveal Tunnel"
+        reveal: "Reveal Tunnel" // TODO: remove
     },
 
     watch :{
@@ -39,26 +39,28 @@ var game = new Vue({
 
     methods: {
         //Game logic
-        startGame: function () {
+        startGame: function () { // Processed
             this.scoreTwo = 0;
             this.scoreOne = 0;
-            this.reveal = "Reveal Tunnel";
+            // this.reveal = "Reveal Tunnel";
             Tunnel = TunnelFile(parseInt(this.size));
-            Tunnel.resetTunnel();
+            // Tunnel.resetTunnel();
             Map.totalClearBoard();
-            if(this.mode == "AI"){
-                Tunnel.easyTunnel(Map);
-                alert("The computer has built a tunnel, detection start now!");
-                this.gameStatus = "node/edge detection";
-                this.gameRound = 2;
-            } else {
-                alert("It's player one's turn to build a tunnel, player two, please look away");
-                this.gameStatus = "tunnel building";
-            }
+            alert("Starting Prime Squares Game...");
+            this.gameStatus = "Player one's turn";
+            // if(this.mode == "AI"){
+            //     Tunnel.easyTunnel(Map);
+            //     alert("The computer has built a tunnel, detection start now!");
+            //     this.gameStatus = "node/edge detection";
+            //     this.gameRound = 2;
+            // } else {
+            //     alert("It's player one's turn to build a tunnel, player two, please look away");
+            //     this.gameStatus = "tunnel building";
+            // }
         },
 
         //When player click a edge, it may means that player is trying to build a tunnel or make a guess or make a final guess
-        edgeClick: function (edge) {
+        edgeClick: function (edge) { // TODO: Not Processed
             if(this.gameStatus == "tunnel building" || this.gameStatus == "tunnel guess") {
                 Map.selectEdge(edge);
                 if (this.gameStatus == "tunnel building") {
@@ -72,8 +74,16 @@ var game = new Vue({
             }
         },
 
+        //Node can be clicked only when it is guessing.
+        nodeClick: function (node) { // TODO: Not Processed
+            if(this.gameStatus == "node/edge detection" && this.gameRound < 4) {
+                Map.prepare(node);
+                Tunnel.prepareNode(node);
+            }
+        },
+
         //After each round of guess, we need to reveal the result of guesses.
-        finishGuess: function () {
+        finishGuess: function () { // TODO: Not Processed
             if (this.gameRound == 1) {
                 this.scoreOne = Tunnel.finalGuess();
                 if (this.scoreOne == -1){
@@ -95,16 +105,8 @@ var game = new Vue({
             }
         },
 
-        //Node can be clicked only when it is guessing.
-        nodeClick: function (node) {
-            if(this.gameStatus == "node/edge detection" && this.gameRound < 4) {
-                Map.prepare(node);
-                Tunnel.prepareNode(node);
-            }
-        },
-
         //When the guess if finished, we need to check the result, calculate the score.
-        finishPrepare: function () {
+        finishPrepare: function () { // TODO: Not Processed
             Map.clearBoard();
             this.guessRound ++;
             //console.log(guessRound);
@@ -141,55 +143,52 @@ var game = new Vue({
         },
 
         //Helper functions
-        maxEdge: function () {
+        maxEdge: function () { // TODO: Not Processed
             return Tunnel.getSize();
         },
 
-        saveScore: function () {
-            var minScore = this.scoreTwo;
+        saveScore: function () { // Processed
+            var maxScore = this.scoreTwo;
             if (this.mode == "PvP") {
-                minScore = Math.min(this.scoreTwo, this.scoreOne);
+                maxScore = Math.max(this.scoreTwo, this.scoreOne);
             }
-            Saver.saveScore(this.winnerName, minScore);
-            this.gameStatus = "mode selection";
+            Saver.saveScore(this.winnerName, maxScore);
+            this.gameStatus = "selection of game parameters";
             this.scoreTwo = 0;
             this.scoreOne = 0;
         },
 
-        getWinner: function () {
-            if(this.mode == "PvP") {
-                if (this.scoreOne > this.scoreTwo) {
-                    return "Player One";
-                } else if (this.scoreOne == this.scoreTwo) {
-                    return "Player One && Player Two";
-                } else {
-                    return "Player Two";
-                }
+        getWinner: function () { // Processed
+            if (this.scoreOne > this.scoreTwo) {
+                return "Player One";
+            } else if (this.scoreOne == this.scoreTwo) {
+                return "Player One && Player Two";
             } else {
-                return "You";
+                return "Player Two";
             }
         },
 
-        endGame: function () {
+        endGame: function () {// TODO: Not Processed
             this.gameRound = 1;
             this.guessRound = 1;
             this.gameStatus = "game end";
             Map.totalClearBoard();
         },
 
-        clearBoard: function () {
+        clearBoard: function () { // TODO: Not Processed
             Tunnel.resetTunnel();
             Map.clearBoard();
         },
 
-        gotoBegin: function () {
+        gotoBegin: function () { // Processed
             Map.totalClearBoard();
-            Tunnel.resetTunnel();
-            this.gameStatus = "mode selection";
+            // Tunnel.resetTunnel();
+            // this.gameStatus = "mode selection";
+            this.gameStatus = "selection of game parameters";
 
         },
 
-        gotoDetect: function(){
+        gotoDetect: function(){ // TODO: Not Processed
             if(Tunnel.isValid(this.size)) {
                 Map.clearBoard();
                 this.gameStatus = "node/edge detection";
@@ -199,42 +198,54 @@ var game = new Vue({
             }
         },
 
-        isValid: function () {
+        isValid: function () {// TODO: Not Processed
             return Tunnel.isValid(this.size);
         },
 
-        edgeLeft: function () {
+        edgeLeft: function () {// TODO: Not Processed
             return Tunnel.edgeLeft();
         },
 
-        revealBoard: function () {
-            Map.totalClearBoard();
-            if(this.reveal == "Reveal Tunnel"){
-                var tunnel = Tunnel.getTunnel();
-                tunnel.map(
-                    function (edge) {
-                        Map.reveal(edge,"good");
-                    }
-                );
-                this.reveal = "Hide Tunnel";
-            } else {
-                this.reveal = "Reveal Tunnel";
-            }
+        // revealBoard: function () {// Processed
+        //     Map.totalClearBoard();
+        //     if(this.reveal == "Reveal Tunnel"){
+        //         var tunnel = Tunnel.getTunnel();
+        //         tunnel.map(
+        //             function (edge) {
+        //                 Map.reveal(edge,"good");
+        //             }
+        //         );
+        //         this.reveal = "Hide Tunnel";
+        //     } else {
+        //         this.reveal = "Reveal Tunnel";
+        //     }
 
+        // },
+
+        // startSameGame: function () {// TODO: Not Processed
+        //     Map.totalClearBoard();
+        //     Tunnel.clearGuess();
+        //     this.mode = "AI";
+        //     this.gameRound = 2;
+        //     this.guessRound = 1;
+        //     this.scoreOne = 0;
+        //     this.scoreTwo = 0;
+        //     this.gameStatus = "node/edge detection";
+        // },
+        
+        showInfoPanel: function() {
+            return false;
         },
 
-        startSameGame: function () {
-            Map.totalClearBoard();
-            Tunnel.clearGuess();
-            this.mode = "AI";
-            this.gameRound = 2;
-            this.guessRound = 1;
-            this.scoreOne = 0;
-            this.scoreTwo = 0;
-            this.gameStatus = "node/edge detection";
+        toggleGrid: function() {
+            this.showTheGrid = !this.showTheGrid;
         },
 
-        startNextRound: function () {
+        showGrid: function(){
+            return this.showTheGrid;
+        },
+
+        startNextRound: function () {// TODO: Not Processed
             this.gameRound++;
             this.guessRound = 1;
             Map.totalClearBoard();
@@ -243,43 +254,43 @@ var game = new Vue({
         },
 
         //Show/Hide logic for html element
-        showBetweenGameInfo: function () {
-            return this.gameStatus == "Between two game";
-        },
+        // showBetweenGameInfo: function () {// Processed
+        //     return this.gameStatus == "Between two game";
+        // },
 
-        showSaveButton: function () {
+        showSaveButton: function () {// TODO: Not Processed
             return (this.scoreOne > 0 || this.scoreTwo > 0) && this.gameStatus == "game end";
         },
 
-        showEdgeInfo: function () {
+        showEdgeInfo: function () {// TODO: Not Processed
             return this.gameStatus == "tunnel building";
         },
 
-        showGuessInfo: function () {
+        showGuessInfo: function () {// TODO: Not Processed
             return this.gameStatus == "node/edge detection";
         },
 
-        showModeSelect: function () {
-            return this.gameStatus == "mode selection";
+        showModeSelect: function () {// Processed
+            return this.gameStatus == "selection of game parameters";
         },
 
-        showFinishGuessInfo: function () {
+        showFinishGuessInfo: function () {// TODO: Not Processed
             return this.gameStatus == "tunnel guess";
         },
 
-        showInstr: function(){
+        showInstr: function(){// Processed
             return this.instr;
         },
 
-        showBasicInfoPvP: function () {
+        showBasicInfoPvP: function () {// Processed
             return this.mode == "PvP";
         },
 
-        showBasicInfoAI: function () {
-            return this.mode == "AI";
-        },
+        // showBasicInfoAI: function () {// Processed
+        //     return this.mode == "AI";
+        // },
 
-        changeInstr: function () {
+        changeInstr: function () {// Processed
             this.instr = !this.instr;
         },
     }
