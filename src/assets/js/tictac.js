@@ -74,6 +74,7 @@ reset_board = () => {
     });
     winner.classList.remove("playerOne");
     winner.classList.remove("playerTwo");
+    winner.classList.remove("draw");
     winner.innerText = "";
     player_turn.innerText = "Ready Player One?";
     local_player_score = 0;
@@ -252,6 +253,7 @@ addPlayerMove = e => {
         winner.innerText = "";
         winner.classList.remove("playerOne");
         winner.classList.remove("playerTwo");
+        winner.classList.remove("draw");
         render_board();
         return;
     }
