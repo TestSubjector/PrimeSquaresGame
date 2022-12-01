@@ -19,8 +19,8 @@ html_show_primes = document.getElementById("show_primes");
 html_player_turn = document.getElementById("player_turn");
 const found_primes = new Set();
 
-initial_text_player_score = player_score.innerText;
-initial_text_player_two_score = player_two_score.innerText;
+initial_text_player_score = "";
+initial_text_player_two_score = "";
 
 render_board = () => {
     play_board.forEach((element, index) => {
@@ -40,6 +40,14 @@ render_board = () => {
 };
 
 loadup = () => {
+    if (!game_started){
+        initial_text_player_score = player_score.innerText;
+        initial_text_player_two_score = player_two_score.innerText;
+        player_score.innerText = initial_text_player_score + " " + local_player_score.toString();
+        player_two_score.innerText = initial_text_player_two_score + " " + local_player_two_score.toString();
+        player_score.classList.add("playerOne");
+        player_two_score.classList.add("playerTwo");
+    }
     game_started = false;
     play_board = [0, 0, 0, 0, 0, 0, 0, 0, 0];
     occupied = [3, 3, 3, 3, 3, 3, 3, 3, 3];
@@ -48,12 +56,6 @@ loadup = () => {
     player_turn.innerText = "Ready to Play? Start the Game!";
     local_player_score = 0;
     local_player_two_score = 0;
-    initial_text_player_score = player_score.innerText;
-    initial_text_player_two_score = player_two_score.innerText;
-    player_score.classList.add("playerOne");
-    player_two_score.classList.add("playerTwo");
-    player_score.innerText = initial_text_player_score + " " + local_player_score.toString();
-    player_two_score.innerText = initial_text_player_two_score + " " + local_player_two_score.toString();
 }
 
 reset_board = () => {
@@ -74,10 +76,18 @@ reset_board = () => {
     winner.classList.remove("playerTwo");
     winner.innerText = "";
     player_turn.innerText = "Ready Player One?";
+    local_player_score = 0;
+    local_player_two_score = 0;
+    player_score.innerText = initial_text_player_score + " " + local_player_score.toString();
+    player_two_score.innerText = initial_text_player_two_score + " " + local_player_two_score.toString();
     render_board();
 };
 
 start_game = () => {
+    if (game_started){
+        alert("Game has already started. Play!");
+        return;
+    }
     game_started = true;
     player_turn.innerText = "Ready Player One?";
     reset_board();
@@ -249,14 +259,6 @@ submit_move = () => { // TODO: 0 shouldn't be there in an edge node
     ++counter;
 }
 
-reset_match = () => {
-    reset_board();
-    local_player_score = 0;
-    local_player_two_score = 0;
-    player_score.innerText = initial_text_player_score + " " + local_player_score.toString();
-    player_two_score.innerText = initial_text_player_two_score + " " + local_player_two_score.toString();
-};
-
 toggle_primes = () => {
     primes_showing = !primes_showing;
     if (primes_showing) show_all_primes();
@@ -275,3 +277,8 @@ show_all_primes = () => {
     997\n\
     ";
 };
+
+stop_game = () => {
+    reset_board();
+    loadup();
+}
