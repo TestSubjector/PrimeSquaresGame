@@ -59,6 +59,10 @@ loadup = () => {
 }
 
 reset_board = () => {
+    if (!game_started){
+        alert("Game hasn't begun yet...");
+        return;
+    }
     play_board = [0, 0, 0, 0, 0, 0, 0, 0, 0];
     occupied = [0, 0, 0, 0, 0, 0, 0, 0, 0];
     board_full = false;
@@ -283,6 +287,10 @@ check_board_complete = () => {
 };
 
 submit_move = () => {
+    if (!game_started){
+        alert("Please start the game first...");
+        return;
+    }
     if (last_move_index == -1){
         alert("Need to put some number somewhere...");
         return;
@@ -330,6 +338,10 @@ show_all_primes = () => {
 };
 
 stop_game = () => {
+    if (!game_started){
+        alert("Need to start the game before it can be stopped...");
+        return;
+    }
     reset_board();
     loadup();
 }
