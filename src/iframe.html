@@ -114,24 +114,24 @@
             </div>
             <div>
                 <div class="instr"v-if="showInstr()">
-                    <strong>Overview:</strong> <br/>
-                    <p> Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla euismod, eros dictum ultricies pharetra, turpis diam tincidunt nibh, ac posuere lorem lectus vel mauris. Duis sollicitudin mi purus, in vehicula</p>
-                    <!-- <strong>Phases:</strong> <br/>
-                    <ol>
-                        <li> The Detector looks away from the screen while the Badguy builds a tunnel.
-                            Maximum length of the tunnel is randomly generated,
-                            and will be specified before building begins.
-                            The tunnel needs to be a simple path with a start and end node on the top and bottom rows respectively.
-                            In order to construct the tunnel, the Badguy needs to click on the edges he wants to be a part of his tunnel.
-                            When he is content with the tunnel, he clicks on the "I finished my tunnel" button in the info panel and the tunnel will disappear. </li>
-                        <li> Now the Detector can begin detecting by placing probes on any number of intersections or edges. When the Detector is done,
-                            click the "Done placing first round of probes" button.
-                            If a given probe is on top of a part of the tunnel,
-                            the probe will turn green. Repeat this process up to two more times. </li>
-                        <li> The Detector selects what she believes is the location of the tunnel.
-                            When she is done, she clicks on the "Ready to submit final guess" button. </li>
-                    </ol> -->
-                    <p>Mauris sit amet leo tempor, posuere risus ut, facilisis nibh. Proin sagittis dignissim enim et porttitor. Donec vel odio et lacus dictum luctus. Donec sagittis egestas malesuada. Donec eros nunc, porta at velit a, mattis eleifend sem. Suspendisse potenti. Fusce id massa eu lectus finibus feugiat a eu lorem.</p>
+                    <strong>Game Description:</strong>
+                    <ul>
+                        <li>
+                            Tic-Tac-Toe like game in which the goal is to form primes along the rows, columns and diagonals (including secondary diagonals) in any direction. The more number of primes one makes, the better the score.
+                        </li>
+                        <li>
+                            Starts with an empty N x N square.
+                        </li>
+                        <li>
+                            Each player alternately fills a square with a number (except the last move is given to player 2).
+                        </li>
+                        <li>
+                            Whenever a number completes a row, column, diagonal (primary or secondary), the number of primes formed as a consequence (in any direction of the row, column or diagonal) are added to the player’s score.
+                        </li>
+                        <li>
+                            0 is not allowed to be placed in any of the border cells.
+                        </li>
+                    </ul>
                 </div>
             </div>
             <div class="scoreboard">

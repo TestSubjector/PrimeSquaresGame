@@ -286,7 +286,7 @@ submit_move = () => {
         return;
     }
     if (play_board[last_move_index] == 0 && last_move_index != 4){
-        alert("0 must not be placed in a square that lies on the edge of the grid.");
+        alert("0 must not be placed in any of the border cells.");
         return;
     }
     occupied[last_move_index] = get_player();
