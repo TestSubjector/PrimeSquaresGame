@@ -22,6 +22,10 @@ const found_primes = new Set();
 initial_text_player_score = "";
 initial_text_player_two_score = "";
 
+// TODO: Add a second phase
+ 
+// TODO: Save scores
+
 render_board = () => {
     play_board.forEach((element, index) => {
         html_board[index].innerText = play_board[index].toString();
@@ -49,7 +53,7 @@ loadup = () => {
         player_two_score.classList.add("playerTwo");
     }
     game_started = false;
-    play_board = [0, 0, 0, 0, 0, 0, 0, 0, 0];
+    play_board = ["", "", "", "", "", "", "", "", ""];
     occupied = [3, 3, 3, 3, 3, 3, 3, 3, 3];
     last_move_index = -1;
     render_board();
@@ -63,7 +67,7 @@ reset_board = () => {
         alert("Game hasn't begun yet...");
         return;
     }
-    play_board = [0, 0, 0, 0, 0, 0, 0, 0, 0];
+    play_board = ["", "", "", "", "", "", "", "", ""];
     occupied = [0, 0, 0, 0, 0, 0, 0, 0, 0];
     board_full = false;
     found_primes.clear();
@@ -242,11 +246,17 @@ addPlayerMove = e => {
         alert("Game is over. Please start a new game.");
         return;
     }
+    if (occupied[e] != 0){
+        alert("That square has already been filled. Please choose an empty square.");
+        return;
+    }
     if (!board_full && occupied[e] == 0) {
         if (last_move_index != -1 && last_move_index != e){
             alert("You can either submit your current move or change the value. Selected square can't be changed now...");
             return;
         }
+        if (play_board[e] == "")
+            play_board[e] = 0;
         play_board[e] = (play_board[e] + 1) % 10;
         last_move_index = e;
         play_board.forEach((element, index) => {
