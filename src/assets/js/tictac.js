@@ -9,6 +9,7 @@ phase_two = false;
 total_turns_in_phase_two = 2;
 current_turns_in_phase_two = 0;
 do_phase_two = true;
+original_move = "";
 
 board_full = false;
 game_started = false;
@@ -80,6 +81,7 @@ reset_board = () => {
     phase_two = false;
     total_turns_in_phase_two = 2;
     current_turns_in_phase_two = 0;
+    original_move = "";
     found_primes.clear();
     winner_found = 0;
     counter = 0;
@@ -258,6 +260,8 @@ phase_two_player_move = e => {
     }
     if (play_board[e] == "")
         play_board[e] = 0;
+    if (original_move == "")
+        original_move = play_board[e];
     play_board[e] = (play_board[e] + 1) % 10;
     last_move_index = e;
     play_board.forEach((element, index) => {
@@ -316,10 +320,12 @@ game_over = () => {
     player_turn.innerText = "Game Over!";
     if (local_player_score > local_player_two_score){
         winner.innerText += "Player One Wins!!";
+        winner.classList.remove("playerTwo");
         winner.classList.add("playerOne");
     }
     else if (local_player_score < local_player_two_score){
         winner.innerText += "Player Two Wins!!";
+        winner.classList.remove("playerOne");
         winner.classList.add("playerTwo");
     }
     else{
@@ -357,6 +363,7 @@ check_board_complete = () => {
         player_turn.innerText = "It's Phase Two! ";
         player_turn.innerText += "Ready Player " + ((counter % 2) == 0? "Two?" : "One?");
         current_turns_in_phase_two += 1;
+        original_move = "";
         return;
     }
     // if (total_turns_in_phase_two == current_turns_in_phase_two){
@@ -376,6 +383,10 @@ submit_move = () => {
     }
     if (play_board[last_move_index] == 0 && last_move_index != 4){
         alert("0 must not be placed in any of the border cells.");
+        return;
+    }
+    if (original_move != "" && original_move == play_board[last_move_index]){
+        alert("You can't submit the same number as before in phase two!");
         return;
     }
     occupied[last_move_index] = get_player();
