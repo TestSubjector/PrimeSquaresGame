@@ -117,10 +117,10 @@
                     <strong>Game Description:</strong>
                     <ul>
                         <li>
-                            Tic-Tac-Toe like game in which the goal is to form primes along the rows, columns and diagonals (including secondary diagonals) in any direction. The more number of primes one makes, the better the score.
+                            A Tic-Tac-Toe like game in which the goal is to form primes along the rows, columns and diagonals (including secondary diagonals) in any direction. The more number of primes one makes, the better the score.
                         </li>
                         <li>
-                            Starts with an empty N x N square.
+                            Starts with an empty 3 x 3 square.
                         </li>
                         <li>
                             Each player alternately fills a square with a number (except the last move is given to player 2).
@@ -130,6 +130,9 @@
                         </li>
                         <li>
                             0 is not allowed to be placed in any of the border cells.
+                        </li>
+                        <li>
+                            Phase Two: If phase two of the game is enabled, then both players get 1 extra turn to change the number on the board after the board has been completely filled to gain extra points. Player One will move first in Phase Two, followed by Player Two.
                         </li>
                     </ul>
                 </div>
@@ -142,12 +145,31 @@
                 <button onclick="start_game()">START GAME</button>
                 <button onclick="reset_board()">RESET BOARD</button>
                 <button onclick="stop_game()">STOP GAME</button>
+                <button onclick="toggle_phase_two()">TOGGLE PHASE TWO</button>
                 <!-- <select class="ui search dropdown" v-model="mode">
                     <option>AI</option>
                     <option>PvP</option>
                 </select> -->
             </div>
             <h3 id="player_turn"></h3>
+            <!-- <div id="wrapper">
+                <section id="left">Left Section
+                    <div class="play-area">
+                        <div id="0" class="block" onclick="addPlayerMove(0)"></div>
+                        <div id="1" class="block" onclick="addPlayerMove(1)"></div>
+                        <div id="2" class="block" onclick="addPlayerMove(2)"></div>
+                        <div id="3" class="block" onclick="addPlayerMove(3)"></div>
+                        <div id="4" class="block" onclick="addPlayerMove(4)"></div>
+                        <div id="5" class="block" onclick="addPlayerMove(5)"></div>
+                        <div id="6" class="block" onclick="addPlayerMove(6)"></div>
+                        <div id="7" class="block" onclick="addPlayerMove(7)"></div>
+                        <div id="8" class="block" onclick="addPlayerMove(8)"></div>
+                    </div>
+                </section>
+                <section id="right">
+                    
+                </section>
+            </div> -->
             <div class="play-area">
                 <div id="0" class="block" onclick="addPlayerMove(0)"></div>
                 <div id="1" class="block" onclick="addPlayerMove(1)"></div>

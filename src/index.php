@@ -2,7 +2,7 @@
 // Filename of your index page
 $index = "iframe.html";
 // Metadata
-$game = "Prime Squares Game";
+$game = "Prime Squares Games";
 $team = "Team KitKat Addicts";
 $instruction = <<<EOD
 <strong>Game Description:</strong>
@@ -11,7 +11,7 @@ $instruction = <<<EOD
                             A Tic-Tac-Toe like game in which the goal is to form primes along the rows, columns and diagonals (including secondary diagonals) in any direction. The more number of primes one makes, the better the score.
                         </li>
                         <li>
-                            Starts with an empty N x N square.
+                            Starts with an empty 3 x 3 square.
                         </li>
                         <li>
                             Each player alternately fills a square with a number (except the last move is given to player 2).
@@ -21,6 +21,9 @@ $instruction = <<<EOD
                         </li>
                         <li>
                             0 is not allowed to be placed in any of the border cells.
+                        </li>
+                        <li>
+                            Phase Two: If phase two of the game is enabled, then both players get 1 extra turn to change the number on the board after the board has been completely filled to gain extra points. Player One will move first in Phase Two, followed by Player Two.
                         </li>
                     </ul>
 EOD;

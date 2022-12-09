@@ -5,6 +5,10 @@ local_player_two_score = 0;
 counter = 0;
 last_move_index = -1;
 primes_showing = false;
+phase_two = false;
+total_turns_in_phase_two = 2;
+current_turns_in_phase_two = 0;
+do_phase_two = true;
 
 board_full = false;
 game_started = false;
@@ -53,6 +57,9 @@ loadup = () => {
         player_two_score.classList.add("playerTwo");
     }
     game_started = false;
+    phase_two = false;
+    total_turns_in_phase_two = 2;
+    current_turns_in_phase_two = 0;
     play_board = ["", "", "", "", "", "", "", "", ""];
     occupied = [3, 3, 3, 3, 3, 3, 3, 3, 3];
     last_move_index = -1;
@@ -70,6 +77,9 @@ reset_board = () => {
     play_board = ["", "", "", "", "", "", "", "", ""];
     occupied = [0, 0, 0, 0, 0, 0, 0, 0, 0];
     board_full = false;
+    phase_two = false;
+    total_turns_in_phase_two = 2;
+    current_turns_in_phase_two = 0;
     found_primes.clear();
     winner_found = 0;
     counter = 0;
@@ -119,8 +129,12 @@ create_number = numbers_list => {
 
 check_line = indices_list => {
     indices_length = indices_list.length;
+    phase_two_check = false;
     for (j = 0; j < indices_length; ++j)
-        if (occupied[indices_list[j]] == 0) return 0;
+        if (!phase_two && occupied[indices_list[j]] == 0) return 0;
+    for (j = 0; j < indices_length; ++j)
+        if (phase_two && indices_list[j] == last_move_index) phase_two_check = true;
+    if (phase_two && !phase_two_check) return;
     const list1 = []
     for (j = 0; j < indices_length; ++j)
         list1.push(play_board[indices_list[j]]);
@@ -138,7 +152,7 @@ check_match = () => {
     let prime_count = 0, current_count = 0;
     for (i = 0; i < 9; i += 3) {
         current_count = check_line([i, i + 1, i + 2]);
-        if (current_count > 0 && !found_primes.has(create_number([i, i+1, i+2]))) {
+        if (current_count > 0 && (!found_primes.has(create_number([i, i+1, i+2])) || phase_two)) {
             html_board[i].classList.add("win");
             html_board[i + 1].classList.add("win");
             html_board[i + 2].classList.add("win");
@@ -148,7 +162,7 @@ check_match = () => {
     }
     for (i = 0; i < 3; i++) {
         current_count = check_line([i, i + 3, i + 6]);
-        if (current_count > 0 && !found_primes.has(create_number([i, i+3, i+6]))) {
+        if (current_count > 0 && (!found_primes.has(create_number([i, i+3, i+6])) || phase_two)) {
             html_board[i].classList.add("win");
             html_board[i + 3].classList.add("win");
             html_board[i + 6].classList.add("win");
@@ -157,7 +171,7 @@ check_match = () => {
         }
     }
     current_count = check_line([0, 4, 8]);
-    if (current_count > 0 && !found_primes.has(48)) {
+    if (current_count > 0 && (!found_primes.has(48) || phase_two)) {
         html_board[0].classList.add("win");
         html_board[4].classList.add("win");
         html_board[8].classList.add("win");
@@ -165,7 +179,7 @@ check_match = () => {
         prime_count += current_count;
     }
     current_count = check_line([2, 4, 6]);
-    if (current_count > 0 && !found_primes.has(246)) {
+    if (current_count > 0 && (!found_primes.has(246) || phase_two)) {
         html_board[2].classList.add("win");
         html_board[4].classList.add("win");
         html_board[6].classList.add("win");
@@ -173,28 +187,28 @@ check_match = () => {
         prime_count += current_count;
     }
     current_count = check_line([1, 3]);
-    if (current_count > 0 && !found_primes.has(13)) {
+    if (current_count > 0 && (!found_primes.has(13) || phase_two)) {
         html_board[1].classList.add("win");
         html_board[3].classList.add("win");
         found_primes.add(13);
         prime_count += current_count;
     }
     current_count = check_line([1, 5]);
-    if (current_count > 0 && !found_primes.has(15)) {
+    if (current_count > 0 && (!found_primes.has(15) || phase_two)) {
         html_board[1].classList.add("win");
         html_board[5].classList.add("win");
         found_primes.add(15);
         prime_count += current_count;
     }
     current_count = check_line([3, 7]);
-    if (current_count > 0 && !found_primes.has(37)) {
+    if (current_count > 0 && (!found_primes.has(37) || phase_two)) {
         html_board[3].classList.add("win");
         html_board[7].classList.add("win");
         found_primes.add(37);
         prime_count += current_count;
     }
     current_count = check_line([5, 7]);
-    if (current_count > 0 && !found_primes.has(57)) {
+    if (current_count > 0 && (!found_primes.has(57) || phase_two)) {
         html_board[5].classList.add("win");
         html_board[7].classList.add("win");
         found_primes.add(57);
@@ -237,14 +251,39 @@ update_scores = () => {
     player_two_score.innerText = initial_text_player_two_score + " " + local_player_two_score.toString();
 };
 
+phase_two_player_move = e => {
+    if (last_move_index != -1 && last_move_index != e){
+        alert("You can either submit your current move or change the value. Selected square can't be changed now...");
+        return;
+    }
+    if (play_board[e] == "")
+        play_board[e] = 0;
+    play_board[e] = (play_board[e] + 1) % 10;
+    last_move_index = e;
+    play_board.forEach((element, index) => {
+        html_board[index].classList.remove("win");
+        html_board[index].classList.remove("lastMovePlayerOne");
+        html_board[index].classList.remove("lastMovePlayerTwo");
+    });
+    winner.innerText = "";
+    winner.classList.remove("playerOne");
+    winner.classList.remove("playerTwo");
+    winner.classList.remove("draw");
+    render_board();
+    return;
+};
+
 addPlayerMove = e => {
     if (!game_started){
         alert("Uhh... You need to start the game first");
         return;
     }
-    if (board_full){
+    if ((board_full && !do_phase_two) || (board_full && do_phase_two && !phase_two)){
         alert("Game is over. Please start a new game.");
         return;
+    }
+    else if(board_full && do_phase_two){
+        phase_two_player_move(e);
     }
     if (occupied[e] != 0){
         alert("That square has already been filled. Please choose an empty square.");
@@ -273,27 +312,57 @@ addPlayerMove = e => {
     }
 };
 
-check_board_complete = () => {
-    board_full = true;
-    play_board.forEach((element,index) => {
-        if (occupied[index] == 0)
-            board_full = false;
-    });
-    if (board_full){
-        player_turn.innerText = "Game Over!";
-        if (local_player_score > local_player_two_score){
-            winner.innerText += "Player One Wins!!";
-            winner.classList.add("playerOne");
-        }
-        else if (local_player_score < local_player_two_score){
-            winner.innerText += "Player Two Wins!!";
-            winner.classList.add("playerTwo");
-        }
-        else{
-            winner.innerText = "Draw!";
-            winner.classList.add("draw");
-        }
+game_over = () => {
+    player_turn.innerText = "Game Over!";
+    if (local_player_score > local_player_two_score){
+        winner.innerText += "Player One Wins!!";
+        winner.classList.add("playerOne");
     }
+    else if (local_player_score < local_player_two_score){
+        winner.innerText += "Player Two Wins!!";
+        winner.classList.add("playerTwo");
+    }
+    else{
+        winner.innerText = "Draw!";
+        winner.classList.add("draw");
+    }
+    last_move_index = -1;
+};
+
+check_board_complete = () => {
+    if (!board_full){
+        board_full = true;
+        play_board.forEach((element,index) => {
+            if (occupied[index] == 0)
+                board_full = false;
+        });
+        if (!board_full) return;
+    }
+    if (board_full && !do_phase_two){
+        game_over();
+        return;
+    }
+    if (!phase_two){
+        phase_two = true;
+        play_board.forEach((element, index) => {
+            // if (occupied[index] == 0)
+            html_board[index].classList.remove("occupied");
+        });
+        occupied = [0, 0, 0, 0, 0, 0, 0, 0, 0];
+        found_primes.clear();
+        counter = 1;
+    }
+    if (total_turns_in_phase_two != current_turns_in_phase_two){
+        phase_two = true;
+        player_turn.innerText = "It's Phase Two! ";
+        player_turn.innerText += "Ready Player " + ((counter % 2) == 0? "Two?" : "One?");
+        current_turns_in_phase_two += 1;
+        return;
+    }
+    // if (total_turns_in_phase_two == current_turns_in_phase_two){
+    phase_two = false;
+    // }
+    game_over();
 };
 
 submit_move = () => {
@@ -325,13 +394,13 @@ submit_move = () => {
     check_board_complete();
     // check_for_winner();
     ++counter;
-}
+};
 
 toggle_primes = () => {
     primes_showing = !primes_showing;
     if (primes_showing) show_all_primes();
     else show_primes.innerText = "";
-}
+};
 
 show_all_primes = () => {
     show_primes.innerText = "Here is a list of primes between 10 and 999:\n\
@@ -354,4 +423,16 @@ stop_game = () => {
     }
     reset_board();
     loadup();
-}
+};
+
+toggle_phase_two = () => {
+    if (game_started){
+        alert("Phase Two cannot be toggled mid game. Please stop the game to toggle this.")
+        return;
+    }
+    do_phase_two = !do_phase_two;
+    if (do_phase_two)
+        player_turn.innerText = "Enabled Phase Two";
+    else
+        player_turn.innerText = "Disabled Phase Two";
+};

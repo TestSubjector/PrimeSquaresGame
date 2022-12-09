@@ -31,6 +31,22 @@
     margin-bottom: 2em;
     font-size: 1.2rem;
   }
+
+  #wrapper {
+    width: auto;
+    height: auto;
+  }
+  #left {
+    width: auto;
+    height: auto;
+    float: left;
+  }
+  
+  #right {
+    width: auto;
+    height: auto;
+    float: left;
+   }
   
   .play-area {
     display: grid;
