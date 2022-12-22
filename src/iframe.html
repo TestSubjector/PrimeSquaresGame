@@ -16,96 +16,6 @@
 <body onload="loadup()">
 
 <div id="gameArea">
-    <div id = "infoPanel" v-if="showInfoPanel()">
-        <button class="large ui green basic button" v-on:click="gotoBegin()">Start from beginning</button>
-        <div id = "basicInfoTwoPlayer" v-if="showBasicInfoPvP()">
-            <h2> P1 Score: {{scoreTwo}} P2 Score:{{scoreOne}} (larger is better) </h2>
-            <h2> It's {{gameStatus}} now </h2>
-        </div>
-
-        <!-- <div id = "basicInfoAI" v-if="showBasicInfoAI()">
-            <h2> Your Score:{{scoreTwo}} (larger is better) </h2>
-            <h2> It's {{gameStatus}} now </h2>
-        </div> -->
-
-        <div class="configureTool" v-if="showModeSelect()">
-            <!-- <select class="ui search dropdown" v-model="mode">
-                <option>AI</option>
-                <option>PvP</option>
-            </select> -->
-
-            <select class="ui search dropdown" v-model="size">
-                <option v-for="sizeReal in sizes" v-bind:value="sizeReal">
-                    {{ sizeReal }}
-                </option>
-            </select>
-
-            <!-- <select class="ui search dropdown" v-model="difficulty">
-                <option>Easy</option>
-                <option>Normal</option>
-            </select> -->
-
-            <button class="large ui blue basic button" v-on:click="startGame()">Start Game! </button>
-        </div>
-
-        <!-- <div v-if="showBetweenGameInfo()">
-            <button class="large ui violet basic button" v-on:click="revealBoard()">{{reveal}}</button>
-            <button class="large ui olive basic button" v-on:click="startNextRound()">Start Next Round</button>
-            <div class="startSameGame">
-                <select class="ui search dropdown" v-model="difficulty">
-                    <option>Easy</option>
-                    <option>Normal</option>
-                </select>
-                <button class="large ui pink basic button" v-on:click="startSameGame()">Start a new single game with this tunnel</button>
-            </div>
-        </div> -->
-
-        <div v-if="showSaveButton()">
-            <h2>Winner is {{getWinner()}}</h2>
-            <div class="ui action input">
-                <input type="text" placeholder="Enter Your Name.." v-model="winnerName">
-                <button  class="large ui green basic button" id="score" v-on:click="saveScore()">Save Score</button>
-            </div>
-            <!-- <button class="large ui violet basic button" v-on:click="revealBoard()">{{reveal}}</button> -->
-            <div class="startGame">
-                <!-- <select class="ui search dropdown" v-model="difficulty">
-                    <option>Easy</option>
-                    <option>Normal</option>
-                </select> -->
-                <button class="large ui pink basic button" v-on:click="startGame()">Start a new game</button>
-            </div>
-        </div>
-
-        <!-- <div id="tunnelInfo">
-            <transition name="fade">
-                <div id="edgeInfo" v-if="showEdgeInfo()">
-                    <h2>Max edges: {{maxEdge()}} Edges left: {{edgeLeft()}} Isvalid: {{isValid()}}</h2>
-                    <button class="large ui blue basic button" v-on:click="gotoDetect()">I finished my tunnel</button>
-                    <button class="large ui red basic button" v-on:click="clearBoard()">Clear and start again</button>
-                </div>
-            </transition>
-
-        </div> -->
-
-        <!-- <div class="guessInfo">
-            <transition name="fade">
-                <div id="guessInfo" v-if="showGuessInfo()">
-                    <h2>Guess round {{guessRound}} of 3</h2>
-                    <button class="large ui basic green button" v-on:click="finishPrepare()">Finish this Round</button>
-                </div>
-            </transition>
-
-            <transition name="fade">
-                <div id="finishGuess" v-if="showFinishGuessInfo()">
-                    <button class="large ui basic green button" v-on:click="finishGuess()">Finish Guess</button>
-                </div>
-            </transition>
-        </div> -->
-    </div>
-    <!-- <div class="title"> -->
-        <!-- <h2>Ready Player One?</h2> -->
-        <!-- <button class="large ui blue basic button" v-on:click="toggleGrid()">Hide/Reveal Grid</button> -->
-    <!-- </div> -->
     <div id = "gridWrapper">
         <div class="container">
             <h1>Prime Squares Game</h1>
@@ -138,7 +48,16 @@
                     </ul>
                 </div>
             </div>
-            <div class="scoreboard">
+            <div class="scoreboard2" id="player_name_section">
+                <h3 id="player_names">Enter Player Names:</h3>
+                <h3>
+                    Player One Name: <input type="text" id = "input_player_one" name="Player One" value="Player One" maxlength="10"/>
+                </h3>
+                <h3>
+                    Player Two Name: <input type="text" id="input_player_two" name = "Player Two" value = "Player Two" maxlength="10"/>
+                </h3>
+            </div>
+            <div class="scoreboard" id="scoreboard_section">
                 <h3 id="player_score">Player One:</h3>
                 <h3 id="player_two_score">Player Two:</h3>
             </div>
@@ -147,30 +66,8 @@
                 <button onclick="reset_board()">RESET BOARD</button>
                 <button onclick="stop_game()">STOP GAME</button>
                 <button onclick="toggle_phase_two()">TOGGLE PHASE TWO</button>
-                <!-- <select class="ui search dropdown" v-model="mode">
-                    <option>AI</option>
-                    <option>PvP</option>
-                </select> -->
             </div>
             <h3 id="player_turn"></h3>
-            <!-- <div id="wrapper">
-                <section id="left">Left Section
-                    <div class="play-area">
-                        <div id="0" class="block" onclick="addPlayerMove(0)"></div>
-                        <div id="1" class="block" onclick="addPlayerMove(1)"></div>
-                        <div id="2" class="block" onclick="addPlayerMove(2)"></div>
-                        <div id="3" class="block" onclick="addPlayerMove(3)"></div>
-                        <div id="4" class="block" onclick="addPlayerMove(4)"></div>
-                        <div id="5" class="block" onclick="addPlayerMove(5)"></div>
-                        <div id="6" class="block" onclick="addPlayerMove(6)"></div>
-                        <div id="7" class="block" onclick="addPlayerMove(7)"></div>
-                        <div id="8" class="block" onclick="addPlayerMove(8)"></div>
-                    </div>
-                </section>
-                <section id="right">
-                    
-                </section>
-            </div> -->
             <div class="play-area">
                 <div id="0" class="block" onclick="addPlayerMove(0)"></div>
                 <div id="1" class="block" onclick="addPlayerMove(1)"></div>
@@ -192,30 +89,6 @@
             <h3 id="show_primes"></h3>
         <script src="assets/js/tictac.js"></script>
     </div>
-    <!-- <div id="gridWrapper" v-if="showGrid()">
-        <template v-for = "m in size + 1" >
-            <div class = nodeWrapper>
-                <template v-for="n in size + 1">
-                    <div v-bind:class="nodes[m-1][n-1].class" v-on:click="nodeClick(nodes[m-1][n-1])">
-                    </div>
-                </template>
-            </div>
-        </template>
-        <template v-for = "m in size + 1" >
-            <div class = hedgeWrapper>
-                <template v-for="n in size + 1">
-                    <div v-bind:class="nodes[m-1][n-1].class" v-on:click="nodeClick(nodes[m-1][n-1])"></div>
-                    <div v-if="n < size + 1" v-bind:class="hedges[m-1][n-1].class"  v-on:click="edgeClick(hedges[m-1][n-1])"></div>
-                </template>
-            </div>
-            <div v-if="m < size + 1" >
-                <div id="vedges" v-for="n in size + 1" class = vedgeWrapper>
-                    <div v-bind:class="vedges[m-1][n-1].class" v-on:click="edgeClick(vedges[m-1][n-1])"></div>
-                    <div v-if="n < size + 1" class="left"></div>
-                </div>
-            </div>
-        </template>
-    </div> -->
 </div>
 
 <script type="text/javascript" src="assets/js/bundle.js" charset="utf-8"></script>

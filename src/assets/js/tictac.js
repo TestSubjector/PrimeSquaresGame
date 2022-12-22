@@ -11,6 +11,9 @@ current_turns_in_phase_two = 0;
 do_phase_two = true;
 original_move = "";
 
+player_one_name = "";
+player_two_name = "";
+
 board_full = false;
 game_started = false;
 winner_found = false;
@@ -26,10 +29,6 @@ const found_primes = new Set();
 
 initial_text_player_score = "";
 initial_text_player_two_score = "";
-
-// TODO: Add a second phase
- 
-// TODO: Save scores
 
 render_board = () => {
     play_board.forEach((element, index) => {
@@ -50,17 +49,23 @@ render_board = () => {
 
 loadup = () => {
     if (!game_started){
-        initial_text_player_score = player_score.innerText;
-        initial_text_player_two_score = player_two_score.innerText;
-        player_score.innerText = initial_text_player_score + " " + local_player_score.toString();
-        player_two_score.innerText = initial_text_player_two_score + " " + local_player_two_score.toString();
+        // initial_text_player_score = player_score.innerText;
+        // initial_text_player_two_score = player_two_score.innerText;
+        player_score.innerText = player_one_name + " Score: " + local_player_score.toString();
+        player_two_score.innerText = player_two_name + " Score: " + local_player_two_score.toString();
+        // player_score.innerText = initial_text_player_score + " " + local_player_score.toString();
+        // player_two_score.innerText = initial_text_player_two_score + " " + local_player_two_score.toString();
         player_score.classList.add("playerOne");
         player_two_score.classList.add("playerTwo");
     }
     game_started = false;
     phase_two = false;
+    document.getElementById("player_name_section").style.display = "inline";
+    document.getElementById("scoreboard_section").style.display = "none";
     total_turns_in_phase_two = 2;
     current_turns_in_phase_two = 0;
+    player_one_name = "";
+    player_two_name = "";
     play_board = ["", "", "", "", "", "", "", "", ""];
     occupied = [3, 3, 3, 3, 3, 3, 3, 3, 3];
     last_move_index = -1;
@@ -96,11 +101,14 @@ reset_board = () => {
     winner.classList.remove("playerTwo");
     winner.classList.remove("draw");
     winner.innerText = "";
-    player_turn.innerText = "Ready Player One?";
+    // player_turn.innerText = "Ready Player One?";
+    player_turn.innerText = "Ready " + player_one_name + "?";
     local_player_score = 0;
     local_player_two_score = 0;
-    player_score.innerText = initial_text_player_score + " " + local_player_score.toString();
-    player_two_score.innerText = initial_text_player_two_score + " " + local_player_two_score.toString();
+    player_score.innerText = player_one_name + " Score: " + local_player_score.toString();
+    player_two_score.innerText = player_two_name + " Score: " + local_player_two_score.toString();
+    // player_score.innerText = initial_text_player_score + " " + local_player_score.toString();
+    // player_two_score.innerText = initial_text_player_two_score + " " + local_player_two_score.toString();
     render_board();
 };
 
@@ -109,8 +117,22 @@ start_game = () => {
         alert("Game has already started. Play!");
         return;
     }
+    player_one_name = input_player_one.value;
+    player_two_name = input_player_two.value;
+    document.getElementById("player_name_section").style.display = "none";
+    document.getElementById("scoreboard_section").style.display = "inline";
+    if (player_one_name == "" || player_two_name == ""){
+        if (player_one_name == "" && player_two_name == "")
+            alert("Please enter the players' names");
+        else if (player_one_name == "")
+            alert("Please enter Player One's name");
+        else
+            alert("Please enter Player Two's name");
+        return;
+    }
     game_started = true;
-    player_turn.innerText = "Ready Player One?";
+    // player_turn.innerText = "Ready Player One?";
+    player_turn.innerText = "Ready " + player_one_name + "?";
     reset_board();
 }
 
@@ -242,15 +264,17 @@ update_scores = () => {
             local_player_two_score += primes_found;
     }
     if (primes_found > 0){
-        winner.innerText = "Well Done! Player " + (get_player() == 1 ? "One " : "Two ") + "earned " + primes_found.toString() + " points!\n";
+        winner.innerText = "Well Done! " + (get_player() == 1 ? player_one_name + " " : player_two_name + " ") + "earned " + primes_found.toString() + " points!\n";
         winner.classList.add((get_player() == 1? "playerOne" : "playerTwo"));
     }
     else
         winner.innerText = "No points earned in this turn...\n";
     html_board[last_move_index].classList.remove("win");
     html_board[last_move_index].classList.add((get_player() == 1? "lastMovePlayerOne" : "lastMovePlayerTwo"));
-    player_score.innerText = initial_text_player_score + " " + local_player_score.toString();
-    player_two_score.innerText = initial_text_player_two_score + " " + local_player_two_score.toString();
+    player_score.innerText = player_one_name + " Score: " + local_player_score.toString();
+    player_two_score.innerText = player_two_name + " Score: " + local_player_two_score.toString();
+    // player_score.innerText = initial_text_player_score + " " + local_player_score.toString();
+    // player_two_score.innerText = initial_text_player_two_score + " " + local_player_two_score.toString();
 };
 
 phase_two_player_move = e => {
@@ -319,12 +343,12 @@ addPlayerMove = e => {
 game_over = () => {
     player_turn.innerText = "Game Over!";
     if (local_player_score > local_player_two_score){
-        winner.innerText += "Player One Wins!!";
+        winner.innerText += player_one_name + " Wins!!";
         winner.classList.remove("playerTwo");
         winner.classList.add("playerOne");
     }
     else if (local_player_score < local_player_two_score){
-        winner.innerText += "Player Two Wins!!";
+        winner.innerText += player_two_name + " Wins!!";
         winner.classList.remove("playerOne");
         winner.classList.add("playerTwo");
     }
@@ -361,7 +385,8 @@ check_board_complete = () => {
     if (total_turns_in_phase_two != current_turns_in_phase_two){
         phase_two = true;
         player_turn.innerText = "It's Phase Two! ";
-        player_turn.innerText += "Ready Player " + ((counter % 2) == 0? "Two?" : "One?");
+        // player_turn.innerText = "Ready " + player_one_name + "?";
+        player_turn.innerText += "Ready " + ((counter % 2) == 0? player_two_name + "?" : player_one_name + "?");
         current_turns_in_phase_two += 1;
         original_move = "";
         return;
@@ -390,10 +415,12 @@ submit_move = () => {
         return;
     }
     occupied[last_move_index] = get_player();
-    player_turn.innerText = "Ready Player " + ((counter % 2) == 0? "Two?" : "One?");
+    // player_turn.innerText = "Ready Player " + ((counter % 2) == 0? "Two?" : "One?");
+    player_turn.innerText = "Ready " + ((counter % 2) == 0? player_two_name + "?" : player_one_name + "?");
     if (counter >= 7){
         occupied[last_move_index] = 2;
-        player_turn.innerText = "Ready Player Two?";
+        // player_turn.innerText = "Ready Player Two?";
+        player_turn.innerText = "Ready " + player_two_name + "?";
     }
     play_board.forEach((element, index) => {
         if (occupied[index] == 0)
@@ -446,4 +473,14 @@ toggle_phase_two = () => {
         player_turn.innerText = "Enabled Phase Two";
     else
         player_turn.innerText = "Disabled Phase Two";
+};
+
+module.exports = function(){
+    return {
+        game_started: game_started,
+
+        has_game_started: function(){
+            return game_started;
+        }
+    }
 };

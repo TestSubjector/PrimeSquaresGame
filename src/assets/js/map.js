@@ -2,7 +2,7 @@ var hedges = [[]];
 var vedges = [[]];
 var nodes = [[]];
 
-var initMap = function (length) { // Now Processed
+var initMap = function (length) {
     nodes = new Array(length + 1);
     hedges = new Array(length + 1);
     vedges = new Array(length + 1);
@@ -102,13 +102,13 @@ module.exports = function(length){
         vedges: vedges,
         nodes: nodes,
 
-        prepare: function (element) { //TODO: Process
+        prepare: function (element) {
             if (!element.class.reveal && !element.class.bad) {
                 element.class.prepare = !element.class.prepare;
             }
         },
 
-        reveal: function (element, type) { //TODO: Process
+        reveal: function (element, type) {
             element.class.prepare = false;
             if(type == "good"){
                 element.class.reveal = true;
@@ -118,11 +118,11 @@ module.exports = function(length){
 
         },
 
-        selectEdge: function (edge) { //TODO: Process
+        selectEdge: function (edge) {
             edge.class.animate = !edge.class.animate;
         },
 
-        totalClearBoard: function () { // Processed
+        totalClearBoard: function () {
             var i, j;
             for (i = 0; i < hedges.length; i++) {
                 var line = hedges[i];
